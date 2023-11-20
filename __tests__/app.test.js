@@ -37,7 +37,7 @@ describe('GET /api/topics', () => {
 			.get('/api/topics')
 			.expect(200)
 			.then(({ body }) => {
-				for (item of body) {
+				for (const item of body) {
 					expect(item).toMatchObject({
 						slug: expect.any(String),
 						description: expect.any(String),
@@ -47,3 +47,60 @@ describe('GET /api/topics', () => {
 			});
 	});
 });
+
+describe.only('GET /api/articles/:article_id', () => {
+	test('200: return an article when a valid id is supplied', () => {
+		const article_id = 3;
+		return request(app)
+			.get(`/api/articles/${article_id}`)
+			.expect(200)
+			.then(({ body }) => {
+				for (const article of body) {
+					expect(article).toMatchObject({
+						article_id: expect.any(Number),
+						title: expect.any(String),
+						topic: expect.any(String),
+						author: expect.any(String),
+						body: expect.any(String),
+						created_at: expect.any(String),
+						votes: expect.any(Number),
+						article_img_url: expect.any(String),
+					});
+				}
+			});
+	});
+	test('404: responds with an error if the article does not exist', () => {
+		const article_id = 30;
+		return request(app)
+			.get(`/api/articles/${article_id}`)
+			.expect(404)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Not found.');
+			});
+	});
+	test('404: responds with an error if the article id is not vaild', () => {
+		const article_id = '3n';
+		return request(app)
+			.get(`/api/articles/${article_id}`)
+			.expect(400)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Bad request.');
+			});
+	});
+});
+
+// not found id, wrong type,
+
+// [
+// 	{
+// 		article_id: 3,
+// 		title: 'Eight pug gifs that remind me of mitch',
+// 		topic: 'mitch',
+// 		author: 'icellusedkars',
+// 		body: 'some gifs',
+// 		created_at: '2020-11-03T09:12:00.000Z',
+// 		votes: 0,
+// 		article_img_url:
+// 			'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+// 	},
+// ];
