@@ -1,4 +1,5 @@
 const db = require('../db/connection');
+const fs = require('fs/promises');
 
 exports.retriveTopics = () => {
 	console.log('retriveTopics');
@@ -6,4 +7,14 @@ exports.retriveTopics = () => {
 	return db.query(sqlQuery).then(({ rows }) => {
 		return rows;
 	});
+};
+
+exports.retriveEndPoints = () => {
+	console.log('retriveEndPoints');
+
+	return fs
+		.readFile(`${__dirname}/../endpoints.json`, 'utf-8')
+		.then((data) => {
+			return JSON.parse(data);
+		});
 };

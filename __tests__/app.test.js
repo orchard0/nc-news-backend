@@ -7,6 +7,24 @@ const app = require('../app/index.js');
 beforeAll(() => seed(data));
 afterAll(() => db.end());
 
+describe('GET /api', () => {
+	test('200: responds with a description of all other endpoints available', () => {
+		return request(app)
+			.get('/api')
+			.expect(200)
+			.then(({ body }) => {
+				for (const route in body) {
+					expect(body[route]).toMatchObject({
+						description: expect.any(String),
+						queries: expect.any(Array),
+						body: expect.any(String),
+						exampleResponse: expect.any(Object),
+					});
+				}
+			});
+	});
+});
+
 describe('Invalid API path', () => {
 	test('404: invalid path not found', () => {
 		return request(app).get('/api/invalid').expect(404);
