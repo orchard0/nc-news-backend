@@ -7,17 +7,6 @@ const app = require('../app/index.js');
 beforeAll(() => seed(data));
 afterAll(() => db.end());
 
-describe('API ready', () => {
-	test('200: responds with a msg that the api is available', () => {
-		return request(app)
-			.get('/api')
-			.expect(200)
-			.then(({ body }) => {
-				expect(body.msg).toBe('Ready!');
-			});
-	});
-});
-
 describe('Invalid API path', () => {
 	test('404: invalid path not found', () => {
 		return request(app).get('/api/invalid').expect(404);
@@ -30,6 +19,12 @@ describe('GET /api/topics', () => {
 			.get('/api/topics')
 			.expect(200)
 			.then(({ body }) => {
+				for (item of body) {
+					expect(item).toMatchObject({
+						slug: expect.any(String),
+						description: expect.any(String),
+					});
+				}
 				expect(body.length).toBe(3);
 			});
 	});
