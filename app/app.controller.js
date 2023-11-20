@@ -2,8 +2,8 @@ const { retriveTopics, retriveEndPoints } = require('./app.models');
 
 exports.getApiEndpoints = (req, res) => {
 	retriveEndPoints()
-		.then((data) => {
-			res.status(200).send(data);
+		.then((endPoints) => {
+			res.status(200).send({ endPoints });
 		})
 		.catch((err) => {
 			console.log(err);
@@ -11,7 +11,7 @@ exports.getApiEndpoints = (req, res) => {
 };
 
 exports.getTopics = (req, res, next) => {
-	retriveTopics().then((data) => {
-		res.status(200).send(data);
+	retriveTopics().then((topics) => {
+		res.status(200).send({ topics });
 	});
 };

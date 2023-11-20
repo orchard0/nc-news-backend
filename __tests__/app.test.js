@@ -13,8 +13,9 @@ describe('GET /api', () => {
 			.get('/api')
 			.expect(200)
 			.then(({ body }) => {
-				for (const route in body) {
-					expect(body[route]).toMatchObject({
+				const { routes } = body;
+				for (const route in routes) {
+					expect(route).toMatchObject({
 						description: expect.any(String),
 						queries: expect.any(Array),
 						body: expect.any(String),
@@ -37,25 +38,27 @@ describe('GET /api/topics', () => {
 			.get('/api/topics')
 			.expect(200)
 			.then(({ body }) => {
-				for (const item of body) {
-					expect(item).toMatchObject({
+				const { topics } = body;
+				expect(topics.length).toBe(3);
+				for (const topic of topics) {
+					expect(topic).toMatchObject({
 						slug: expect.any(String),
 						description: expect.any(String),
 					});
 				}
-				expect(body.length).toBe(3);
 			});
 	});
 });
 
-describe.only('GET /api/articles/:article_id', () => {
+describe('GET /api/articles/:article_id', () => {
 	test('200: return an article when a valid id is supplied', () => {
 		const article_id = 3;
 		return request(app)
 			.get(`/api/articles/${article_id}`)
 			.expect(200)
 			.then(({ body }) => {
-				for (const article of body) {
+				const { articles } = body;
+				for (const article of articles) {
 					expect(article).toMatchObject({
 						article_id: expect.any(Number),
 						title: expect.any(String),
@@ -88,19 +91,3 @@ describe.only('GET /api/articles/:article_id', () => {
 			});
 	});
 });
-
-// not found id, wrong type,
-
-// [
-// 	{
-// 		article_id: 3,
-// 		title: 'Eight pug gifs that remind me of mitch',
-// 		topic: 'mitch',
-// 		author: 'icellusedkars',
-// 		body: 'some gifs',
-// 		created_at: '2020-11-03T09:12:00.000Z',
-// 		votes: 0,
-// 		article_img_url:
-// 			'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
-// 	},
-// ];
