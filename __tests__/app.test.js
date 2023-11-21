@@ -60,7 +60,7 @@ describe('GET /api/articles/:article_id', () => {
 				const { articles } = body;
 				for (const article of articles) {
 					expect(article).toMatchObject({
-						article_id: expect.any(article_id),
+						article_id: article_id,
 						title: expect.any(String),
 						topic: expect.any(String),
 						author: expect.any(String),
