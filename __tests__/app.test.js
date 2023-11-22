@@ -95,7 +95,7 @@ describe('GET /api/articles/:article_id', () => {
 describe('GET /api/articles/', () => {
 	test('200: return all articles', () => {
 		return request(app)
-			.get(`/api/articles/`)
+			.get(`/api/articles`)
 			.expect(200)
 			.then(({ body }) => {
 				const { articles } = body;
@@ -116,6 +116,53 @@ describe('GET /api/articles/', () => {
 				expect(articles).toBeSortedBy('created_at', {
 					descending: true,
 				});
+			});
+	});
+});
+
+describe('GET /api/articles/:article_id/comments', () => {
+	test('200: respond with all the comments for the specified article_id', () => {
+		const article_id = 1;
+		return request(app)
+			.get(`/api/articles/${article_id}/comments`)
+			.expect(200)
+			.then(({ body }) => {
+				const { comments } = body;
+				expect(comments.length).not.toBe(0);
+
+				for (const comment of comments) {
+					expect(comment).toMatchObject({
+						article_id: article_id,
+						body: expect.any(String),
+						author: expect.any(String),
+						created_at: expect.any(String),
+						votes: expect.any(Number),
+						comment_id: expect.any(Number),
+					});
+				}
+
+				expect(comments).toBeSortedBy('created_at', {
+					descending: true,
+				});
+			});
+	});
+
+	test('404: respond with not found for a valid article without comments', () => {
+		const article_id = 2; // dose not have any comments
+		return request(app)
+			.get(`/api/articles/${article_id}/comments`)
+			.expect(404)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Not found.');
+			});
+	});
+	test('400: respond with bad request for an invalid article_id', () => {
+		const article_id = 't33';
+		return request(app)
+			.get(`/api/articles/${article_id}/comments`)
+			.expect(400)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Bad request.');
 			});
 	});
 });

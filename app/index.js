@@ -7,13 +7,18 @@ const {
 	handlePostgreErrors,
 	handleServerErrors,
 } = require('./errors');
-const { getArticleById, getArticles } = require('./articles.controller');
+const {
+	getArticleById,
+	getArticles,
+	getCommentsByArticleId,
+} = require('./articles.controller');
 
 const app = express();
 app.use(express.json());
 
 app.get('/api', getApiEndpoints);
 app.get('/api/topics', getTopics);
+app.get('/api/articles/:article_id/comments', getCommentsByArticleId);
 app.get('/api/articles/:article_id', getArticleById);
 app.get('/api/articles', getArticles);
 
