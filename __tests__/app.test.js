@@ -99,7 +99,9 @@ describe('GET /api/articles/', () => {
 			.expect(200)
 			.then(({ body }) => {
 				const { articles } = body;
+				expect(articles.length).not.toBe(0);
 				for (const article of articles) {
+					expect(article).not.toHaveProperty('body');
 					expect(article).toMatchObject({
 						article_id: expect.any(Number),
 						title: expect.any(String),
