@@ -99,7 +99,6 @@ describe('GET /api/articles/', () => {
 			.expect(200)
 			.then(({ body }) => {
 				const { articles } = body;
-				console.log(typeof articles);
 				for (const article of articles) {
 					expect(article).toMatchObject({
 						article_id: expect.any(Number),
