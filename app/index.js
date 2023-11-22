@@ -7,7 +7,7 @@ const {
 	handlePostgreErrors,
 	handleServerErrors,
 } = require('./errors');
-const { getArticleById } = require('./articles.controller');
+const { getArticleById, getArticles } = require('./articles.controller');
 
 const app = express();
 app.use(express.json());
@@ -15,6 +15,7 @@ app.use(express.json());
 app.get('/api', getApiEndpoints);
 app.get('/api/topics', getTopics);
 app.get('/api/articles/:article_id', getArticleById);
+app.get('/api/articles', getArticles);
 
 app.use(handlePostgreErrors);
 app.use(handleCustomErrors);
