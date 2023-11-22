@@ -95,7 +95,7 @@ describe('GET /api/articles/:article_id', () => {
 describe('GET /api/articles/', () => {
 	test('200: return all articles', () => {
 		return request(app)
-			.get(`/api/articles`)
+			.get(`/api/articles/`)
 			.expect(200)
 			.then(({ body }) => {
 				const { articles } = body;
@@ -148,7 +148,7 @@ describe('GET /api/articles/:article_id/comments', () => {
 	});
 
 	test('404: respond with not found for a valid article without comments', () => {
-		const article_id = 2; // dose not have any comments
+		const article_id = 2; // does not have any comments
 		return request(app)
 			.get(`/api/articles/${article_id}/comments`)
 			.expect(404)
