@@ -81,7 +81,7 @@ describe('GET /api/articles/:article_id', () => {
 				expect(body.msg).toBe('Not found.');
 			});
 	});
-	test('404: responds with an error if the article id is not vaild', () => {
+	test('400: responds with an error if the article id is not vaild', () => {
 		const article_id = '3n';
 		return request(app)
 			.get(`/api/articles/${article_id}`)
@@ -160,6 +160,87 @@ describe('GET /api/articles/:article_id/comments', () => {
 		const article_id = 't33';
 		return request(app)
 			.get(`/api/articles/${article_id}/comments`)
+			.expect(400)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Bad request.');
+			});
+	});
+});
+
+describe('POST /api/articles/:article_id/comments', () => {
+	test('201: returns the comment added to the database', () => {
+		const input = {
+			username: 'icellusedkars',
+			body: 'this is a new comment',
+		};
+		const article_id = 2;
+		return request(app)
+			.post(`/api/articles/${article_id}/comments`)
+			.send(input)
+			.expect(201)
+			.then(({ body }) => {
+				const { comment } = body;
+				expect(comment.length).toBe(1);
+				expect(comment[0]).toMatchObject({
+					article_id: article_id,
+					body: expect.any(String),
+					author: expect.any(String),
+					created_at: expect.any(String),
+					votes: expect.any(Number),
+					comment_id: expect.any(Number),
+				});
+			});
+	});
+	test('404: responds with not found if the username is invaild', () => {
+		const input = {
+			username: 'invaliduser',
+			body: 'this is a new comment',
+		};
+		const article_id = 2;
+		return request(app)
+			.post(`/api/articles/${article_id}/comments`)
+			.send(input)
+			.expect(404)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Not found.');
+			});
+	});
+	test('400: responds with a bad request if the article_id is invaild', () => {
+		const input = {
+			username: 'icellusedkars',
+			body: 'this is a new comment',
+		};
+		const article_id = 'notvaild';
+		return request(app)
+			.post(`/api/articles/${article_id}/comments`)
+			.send(input)
+			.expect(400)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Bad request.');
+			});
+	});
+	test('400: responds with a bad request if the body was empty', () => {
+		const input = {
+			username: 'icellusedkars',
+			body: '',
+		};
+		const article_id = 1;
+		return request(app)
+			.post(`/api/articles/${article_id}/comments`)
+			.send(input)
+			.expect(400)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Bad request.');
+			});
+	});
+	test('400: responds with a bad request if the body is missing', () => {
+		const input = {
+			username: 'icellusedkars',
+		};
+		const article_id = 1;
+		return request(app)
+			.post(`/api/articles/${article_id}/comments`)
+			.send(input)
 			.expect(400)
 			.then(({ body }) => {
 				expect(body.msg).toBe('Bad request.');

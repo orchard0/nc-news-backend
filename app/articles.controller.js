@@ -2,7 +2,9 @@ const {
 	retriveArticleById,
 	retriveArticles,
 	retriveCommentsbyArticleId,
+	addCommentOnArticle,
 } = require('./articles.models');
+const { retriveAuthors } = require('./authors.models');
 
 exports.getArticleById = (req, res, next) => {
 	const id = req.params.article_id;
@@ -30,6 +32,27 @@ exports.getCommentsByArticleId = (req, res, next) => {
 	retriveCommentsbyArticleId(articleId)
 		.then((comments) => {
 			res.status(200).send({ comments });
+		})
+		.catch((err) => {
+			next(err);
+		});
+};
+
+exports.postCommentOnArticle = (req, res, next) => {
+	const comment = req.body;
+	const articleId = req.params.article_id;
+
+	const promises = [
+		retriveArticleById(articleId),
+		retriveAuthors(comment.username),
+	];
+
+	Promise.all(promises)
+		.then(() => {
+			return addCommentOnArticle(articleId, comment);
+		})
+		.then((comment) => {
+			res.status(201).send({ comment });
 		})
 		.catch((err) => {
 			next(err);

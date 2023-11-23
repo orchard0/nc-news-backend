@@ -1,5 +1,5 @@
+const format = require('pg-format');
 const db = require('../db/connection');
-const { retriveEndPoints } = require('./app.models');
 const { articleCommentCount } = require('./utils');
 
 exports.retriveArticleById = (id) => {
@@ -60,6 +60,27 @@ exports.retriveCommentsbyArticleId = (
 		if (!rows.length) {
 			return Promise.reject({ status: 404, msg: 'Not found.' });
 		}
+		return rows;
+	});
+};
+
+exports.addCommentOnArticle = (article_id, { body, username }) => {
+	try {
+		if (!body.length) {
+			return Promise.reject({ status: 400, msg: 'Bad request.' });
+		}
+	} catch {
+		return Promise.reject({ status: 400, msg: 'Bad request.' });
+	}
+
+	const created_at = new Date(Date.now());
+
+	let queryString = format(
+		'insert into comments (body, article_id, author, votes, created_at) values %L returning *',
+		[[body, article_id, username, 0, created_at]]
+	);
+
+	return db.query(queryString).then(({ rows }) => {
 		return rows;
 	});
 };
