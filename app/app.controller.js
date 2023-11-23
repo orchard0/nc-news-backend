@@ -1,4 +1,8 @@
-const { retriveTopics, retriveEndPoints } = require('./app.models');
+const {
+	retriveTopics,
+	retriveEndPoints,
+	retriveUsers,
+} = require('./app.models');
 const { removeComment, retriveCommentbyId } = require('./comments.models');
 
 exports.getApiEndpoints = (req, res) => {
@@ -25,6 +29,16 @@ exports.deleteComment = (req, res, next) => {
 		})
 		.then(() => {
 			res.status(204).send();
+		})
+		.catch((err) => {
+			next(err);
+		});
+};
+
+exports.getUsers = (req, res, next) => {
+	retriveUsers()
+		.then((users) => {
+			res.status(200).send({ users });
 		})
 		.catch((err) => {
 			next(err);

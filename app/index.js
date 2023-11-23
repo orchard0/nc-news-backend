@@ -5,6 +5,7 @@ const {
 	getApiEndpoints,
 	getTopics,
 	deleteComment,
+	getUsers,
 } = require('./app.controller');
 const {
 	handleCustomErrors,
@@ -30,6 +31,7 @@ app.get('/api/articles', getArticles);
 app.post('/api/articles/:article_id/comments', postCommentOnArticle);
 app.patch('/api/articles/:article_id', updateArticle);
 app.delete('/api/comments/:comment_id', deleteComment);
+app.get('/api/users', getUsers);
 
 app.use(handlePostgreErrors);
 app.use(handleCustomErrors);

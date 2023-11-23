@@ -15,3 +15,10 @@ exports.retriveEndPoints = () => {
 			return JSON.parse(data);
 		});
 };
+
+exports.retriveUsers = () => {
+	const queryString = 'select * from users;';
+	return db.query(queryString).then(({ rows }) => {
+		return rows;
+	});
+};
