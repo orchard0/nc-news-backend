@@ -13,9 +13,15 @@ exports.retriveArticleById = (id) => {
 	});
 };
 
-exports.retriveArticles = (sort_by = 'created_at', order = 'desc') => {
+exports.retriveArticles = (topic, sort_by = 'created_at', order = 'desc') => {
 	let results;
+	let queryValues = [];
 	let queryString = `select * from articles `;
+
+	if (topic) {
+		queryValues.push(topic);
+		queryString += `where topic = $1`;
+	}
 
 	if (sort_by) {
 		queryString += `order by ${sort_by} ${order}`;
