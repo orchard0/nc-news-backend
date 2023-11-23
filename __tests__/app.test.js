@@ -258,7 +258,7 @@ describe('POST /api/articles/:article_id/comments', () => {
 	});
 });
 
-describe.only('PATCH /api/articles/:article_id', () => {
+describe('PATCH /api/articles/:article_id', () => {
 	test('200: responds with the updated article', () => {
 		const input = { inc_votes: 100 };
 		const article_id = 1;
@@ -308,6 +308,31 @@ describe.only('PATCH /api/articles/:article_id', () => {
 		return request(app)
 			.patch(`/api/articles/${article_id}`)
 			.send(input)
+			.expect(400)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Bad request.');
+			});
+	});
+});
+
+describe('DELETE /api/comments/:comment_id', () => {
+	test('204: responds with no content', () => {
+		const comment_id = 1;
+		return request(app).delete(`/api/comments/${comment_id}`).expect(204);
+	});
+	test('404: responds not found for non-existent comment_id', () => {
+		const comment_id = 9999;
+		return request(app)
+			.delete(`/api/comments/${comment_id}`)
+			.expect(404)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Not found.');
+			});
+	});
+	test('400: responds bad request for invalid comment_id', () => {
+		const comment_id = 'invaild';
+		return request(app)
+			.delete(`/api/comments/${comment_id}`)
 			.expect(400)
 			.then(({ body }) => {
 				expect(body.msg).toBe('Bad request.');
