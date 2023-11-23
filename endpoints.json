@@ -2,7 +2,7 @@
 	"GET /api": {
 		"description": "serves up a json representation of all the available endpoints of the api",
 		"queries": [],
-		"body": "empty",
+		"body": null,
 		"exampleResponse": {
 			"GET /api": {},
 			"GET /api/topics": {},
@@ -12,7 +12,7 @@
 	"GET /api/topics": {
 		"description": "serves an array of all topics",
 		"queries": [],
-		"body": "empty",
+		"body": null,
 		"exampleResponse": {
 			"topics": [{ "slug": "football", "description": "Footie!" }]
 		}
@@ -20,7 +20,7 @@
 	"GET /api/articles": {
 		"description": "serves an array of all articles",
 		"queries": ["author", "topic", "sort_by", "order"],
-		"body": "empty",
+		"body": null,
 		"exampleResponse": {
 			"articles": [
 				{
@@ -39,7 +39,7 @@
 	"GET /api/articles/:article_id": {
 		"description": "serves a json with the article with the request article_id",
 		"queries": [],
-		"body": "empty",
+		"body": null,
 		"exampleResponse": {
 			"topics": [
 				{
@@ -73,5 +73,11 @@
 				}
 			]
 		}
+	},
+	"DELETE /api/comments/:comment_id": {
+		"description": "delete a comment by it's id",
+		"queries": [],
+		"body": null,
+		"exampleResponse": null
 	}
 }
