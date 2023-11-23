@@ -42,14 +42,8 @@ exports.retriveArticles = (sort_by = 'created_at', order = 'desc') => {
 };
 
 exports.retriveCommentsbyArticleId = (articleId) => {
-	const queryValues = [];
-	let queryString = `select * from comments `;
-
-	queryValues.push(articleId);
-	queryString += 'where article_id = $1 ';
-	queryString += `order by created_at desc `;
-
-	return db.query(queryString, queryValues).then(({ rows }) => {
+	let queryString = `select * from comments where article_id = $1 order by created_at desc`;
+	return db.query(queryString, [articleId]).then(({ rows }) => {
 		return rows;
 	});
 };
@@ -63,11 +57,9 @@ exports.addCommentOnArticle = (article_id, { body, username }) => {
 		return Promise.reject({ status: 400, msg: 'Bad request.' });
 	}
 
-	const created_at = new Date(Date.now());
-
 	let queryString = format(
-		'insert into comments (body, article_id, author, votes, created_at) values %L returning *',
-		[[body, article_id, username, 0, created_at]]
+		'insert into comments (body, article_id, author, votes) values %L returning *',
+		[[body, article_id, username, 0]]
 	);
 
 	return db.query(queryString).then(({ rows }) => {
