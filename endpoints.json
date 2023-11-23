@@ -2,7 +2,7 @@
 	"GET /api": {
 		"description": "serves up a json representation of all the available endpoints of the api",
 		"queries": [],
-		"body": "empty",
+		"body": null,
 		"exampleResponse": {
 			"GET /api": {},
 			"GET /api/topics": {},
@@ -12,7 +12,7 @@
 	"GET /api/topics": {
 		"description": "serves an array of all topics",
 		"queries": [],
-		"body": "empty",
+		"body": null,
 		"exampleResponse": {
 			"topics": [{ "slug": "football", "description": "Footie!" }]
 		}
@@ -20,7 +20,7 @@
 	"GET /api/articles": {
 		"description": "serves an array of all articles",
 		"queries": ["author", "topic", "sort_by", "order"],
-		"body": "empty",
+		"body": null,
 		"exampleResponse": {
 			"articles": [
 				{
@@ -39,7 +39,7 @@
 	"GET /api/articles/:article_id": {
 		"description": "serves a json with the article with the request article_id",
 		"queries": [],
-		"body": "empty",
+		"body": null,
 		"exampleResponse": {
 			"topics": [
 				{
@@ -55,5 +55,47 @@
 				}
 			]
 		}
+	},
+	"PATCH /api/articles/:article_id": {
+		"description": "patch an article on the specified article_id",
+		"queries": [],
+		"body": "{ inc_votes: 100 }",
+		"exampleResponse": {
+			"topics": [
+				{
+					"article_id": 3,
+					"title": "Eight pug gifs that remind me of mitch",
+					"topic": "mitch",
+					"author": "icellusedkars",
+					"body": "some gifs",
+					"created_at": "2020-11-03T09:12:00.000Z",
+					"votes": 100,
+					"article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+				}
+			]
+		}
+	},
+	"DELETE /api/comments/:comment_id": {
+		"description": "delete a comment by it's id",
+		"queries": [],
+		"body": null,
+		"exampleResponse": null
+	},
+	"GET /api/users": {
+		"description": "serves all the users",
+		"queries": [],
+		"body": null,
+		"exampleResponse": [
+			{
+				"username": "butter_bridge",
+				"name": "jonny",
+				"avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+			},
+			{
+				"username": "lurker",
+				"name": "do_nothing",
+				"avatar_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png"
+			}
+		]
 	}
 }

@@ -29,14 +29,14 @@ exports.retriveArticles = (topic, sort_by = 'created_at', order = 'desc') => {
 
 	if (topic) {
 		queryValues.push(topic);
-		queryString += `where topic = $1`;
+		queryString += `where topic = $1 `;
 	}
 
 	if (sort_by) {
 		queryString += `order by ${sort_by} ${order}`;
 	}
 	return db
-		.query(queryString)
+		.query(queryString, queryValues)
 		.then(({ rows }) => {
 			if (rows.length === 0) {
 				return Promise.reject({ status: 404, msg: 'Not found.' });
