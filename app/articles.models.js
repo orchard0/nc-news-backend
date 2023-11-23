@@ -40,26 +40,15 @@ exports.retriveArticles = (sort_by = 'created_at', order = 'desc') => {
 		});
 };
 
-exports.retriveCommentsbyArticleId = (
-	articleId,
-	sort_by = 'created_at',
-	order = 'desc'
-) => {
+exports.retriveCommentsbyArticleId = (articleId) => {
 	const queryValues = [];
 	let queryString = `select * from comments `;
 
-	if (articleId) {
-		queryValues.push(articleId);
-		queryString += 'where article_id = $1 ';
-	}
+	queryValues.push(articleId);
+	queryString += 'where article_id = $1 ';
+	queryString += `order by created_at desc `;
 
-	if (sort_by) {
-		queryString += `order by ${sort_by} ${order}`;
-	}
 	return db.query(queryString, queryValues).then(({ rows }) => {
-		if (!rows.length) {
-			return Promise.reject({ status: 404, msg: 'Not found.' });
-		}
 		return rows;
 	});
 };

@@ -147,8 +147,18 @@ describe('GET /api/articles/:article_id/comments', () => {
 			});
 	});
 
-	test('404: respond with not found for a valid article without comments', () => {
+	test('200: respond with any empty array for a valid article without comments', () => {
 		const article_id = 2; // does not have any comments
+		return request(app)
+			.get(`/api/articles/${article_id}/comments`)
+			.expect(200)
+			.then(({ body }) => {
+				const { comments } = body;
+				expect(comments).toEqual([]);
+			});
+	});
+	test('404: respond with not found for a vaild non-existent article_id', () => {
+		const article_id = 9999;
 		return request(app)
 			.get(`/api/articles/${article_id}/comments`)
 			.expect(404)
