@@ -57,11 +57,9 @@ exports.addCommentOnArticle = (article_id, { body, username }) => {
 		return Promise.reject({ status: 400, msg: 'Bad request.' });
 	}
 
-	const created_at = new Date(Date.now());
-
 	let queryString = format(
-		'insert into comments (body, article_id, author, votes, created_at) values %L returning *',
-		[[body, article_id, username, 0, created_at]]
+		'insert into comments (body, article_id, author, votes) values %L returning *',
+		[[body, article_id, username, 0]]
 	);
 
 	return db.query(queryString).then(({ rows }) => {
