@@ -30,7 +30,10 @@ exports.getArticles = (req, res, next) => {
 
 exports.getCommentsByArticleId = (req, res, next) => {
 	const articleId = req.params.article_id;
-	retriveCommentsbyArticleId(articleId)
+	retriveArticleById(articleId)
+		.then(() => {
+			return retriveCommentsbyArticleId(articleId);
+		})
 		.then((comments) => {
 			res.status(200).send({ comments });
 		})
