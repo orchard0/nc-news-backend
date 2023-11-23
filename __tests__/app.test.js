@@ -258,7 +258,7 @@ describe('POST /api/articles/:article_id/comments', () => {
 	});
 });
 
-describe.only('PATCH /api/articles/:article_id', () => {
+describe('PATCH /api/articles/:article_id', () => {
 	test('200: responds with the updated article', () => {
 		const input = { inc_votes: 100 };
 		const article_id = 1;
