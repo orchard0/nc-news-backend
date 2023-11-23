@@ -41,7 +41,6 @@ exports.retriveArticles = (sort_by = 'created_at', order = 'desc') => {
 };
 
 exports.retriveCommentsbyArticleId = (articleId) => {
-	const queryValues = [];
 	let queryString = `select * from comments where article_id = $1 order by created_at desc`;
 	return db.query(queryString, [articleId]).then(({ rows }) => {
 		return rows;
