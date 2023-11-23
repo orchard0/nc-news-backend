@@ -3,6 +3,7 @@ const {
 	retriveArticles,
 	retriveCommentsbyArticleId,
 	addCommentOnArticle,
+	updateArticleOnDatabase,
 } = require('./articles.models');
 const { retriveAuthors } = require('./authors.models');
 
@@ -53,6 +54,18 @@ exports.postCommentOnArticle = (req, res, next) => {
 		})
 		.then((comment) => {
 			res.status(201).send({ comment });
+		})
+		.catch((err) => {
+			next(err);
+		});
+};
+
+exports.updateArticle = (req, res, next) => {
+	const body = req.body;
+	const articleId = req.params.article_id;
+	updateArticleOnDatabase(articleId, body)
+		.then((article) => {
+			res.status(200).send({ article });
 		})
 		.catch((err) => {
 			next(err);

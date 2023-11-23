@@ -1,6 +1,7 @@
 const format = require('pg-format');
 const db = require('../db/connection');
 const { articleCommentCount } = require('./utils');
+const { getArticleById } = require('./articles.controller');
 
 exports.retriveArticleById = (id) => {
 	const sqlQuery = `select * from articles where article_id = $1`;
@@ -83,4 +84,18 @@ exports.addCommentOnArticle = (article_id, { body, username }) => {
 	return db.query(queryString).then(({ rows }) => {
 		return rows;
 	});
+};
+
+exports.updateArticleOnDatabase = (articleID, body) => {
+	return this.retriveArticleById(articleID)
+		.then((articles) => {
+			const article = articles[0];
+			const updatedVotes = article.votes + Number(body.inc_votes);
+			const queryValues = [updatedVotes, articleID];
+			const queryString = `update articles set votes = $1 where article_id = $2 returning *`;
+			return db.query(queryString, queryValues);
+		})
+		.then(({ rows }) => {
+			return rows;
+		});
 };

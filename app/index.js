@@ -12,6 +12,7 @@ const {
 	getArticles,
 	getCommentsByArticleId,
 	postCommentOnArticle,
+	updateArticle,
 } = require('./articles.controller');
 
 const app = express();
@@ -23,6 +24,7 @@ app.get('/api/articles/:article_id/comments', getCommentsByArticleId);
 app.get('/api/articles/:article_id', getArticleById);
 app.get('/api/articles', getArticles);
 app.post('/api/articles/:article_id/comments', postCommentOnArticle);
+app.patch('/api/articles/:article_id', updateArticle);
 
 app.use(handlePostgreErrors);
 app.use(handleCustomErrors);

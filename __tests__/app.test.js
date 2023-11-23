@@ -247,3 +247,60 @@ describe('POST /api/articles/:article_id/comments', () => {
 			});
 	});
 });
+
+describe.only('PATCH /api/articles/:article_id', () => {
+	test('200: responds with the updated article', () => {
+		const input = { inc_votes: 100 };
+		const article_id = 1;
+		return request(app)
+			.patch(`/api/articles/${article_id}`)
+			.send(input)
+			.expect(200)
+			.then(({ body }) => {
+				const { article } = body;
+				expect(article.length).toBe(1);
+				expect(article[0]).toMatchObject({
+					article_id: article_id,
+					title: expect.any(String),
+					topic: expect.any(String),
+					author: expect.any(String),
+					created_at: expect.any(String),
+					votes: 200,
+					article_img_url: expect.any(String),
+				});
+			});
+	});
+	test('400: responds with a bad request if the patch is invaild', () => {
+		const input = { inc_votes: 'invaild' };
+		const article_id = 1;
+		return request(app)
+			.patch(`/api/articles/${article_id}`)
+			.send(input)
+			.expect(400)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Bad request.');
+			});
+	});
+	test('404: responds with not found if the article_id does not exist', () => {
+		const input = { inc_votes: 100 };
+		const article_id = 9999;
+		return request(app)
+			.patch(`/api/articles/${article_id}`)
+			.send(input)
+			.expect(404)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Not found.');
+			});
+	});
+	test('400: responds with bad request if the article_id is not vaild', () => {
+		const input = { inc_votes: 100 };
+		const article_id = 'invalid';
+		return request(app)
+			.patch(`/api/articles/${article_id}`)
+			.send(input)
+			.expect(400)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Bad request.');
+			});
+	});
+});
