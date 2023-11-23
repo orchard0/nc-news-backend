@@ -5,12 +5,21 @@ const { getArticleById } = require('./articles.controller');
 
 exports.retriveArticleById = (id) => {
 	const sqlQuery = `select * from articles where article_id = $1`;
-	return db.query(sqlQuery, [id]).then(({ rows }) => {
-		if (rows.length === 0) {
-			return Promise.reject({ status: 404, msg: 'Not found.' });
-		}
-		return rows;
-	});
+	let article;
+	return db
+		.query(sqlQuery, [id])
+		.then(({ rows }) => {
+			if (rows.length === 0) {
+				return Promise.reject({ status: 404, msg: 'Not found.' });
+			}
+			article = rows;
+			const commentQuery = 'select * from comments where article_id = $1';
+			return db.query(commentQuery, [id]);
+		})
+		.then(({ rows }) => {
+			article[0].comment_count = rows.length;
+			return article;
+		});
 };
 
 exports.retriveArticles = (topic, sort_by = 'created_at', order = 'desc') => {
