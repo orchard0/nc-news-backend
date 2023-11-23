@@ -118,6 +118,39 @@ describe('GET /api/articles/', () => {
 				});
 			});
 	});
+	test('200: return all articles with the specified topic', () => {
+		return request(app)
+			.get(`/api/articles/?topic=mitch`)
+			.expect(200)
+			.then(({ body }) => {
+				const { articles } = body;
+				expect(articles.length).not.toBe(0);
+				for (const article of articles) {
+					expect(article).not.toHaveProperty('body');
+					expect(article).toMatchObject({
+						article_id: expect.any(Number),
+						title: expect.any(String),
+						topic: 'mitch',
+						author: expect.any(String),
+						created_at: expect.any(String),
+						votes: expect.any(Number),
+						article_img_url: expect.any(String),
+						comment_count: expect.any(Number),
+					});
+				}
+				expect(articles).toBeSortedBy('created_at', {
+					descending: true,
+				});
+			});
+	});
+	test('200: return not found if there are no articles with specified topic', () => {
+		return request(app)
+			.get(`/api/articles/?topic=invaild`)
+			.expect(404)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Not found.');
+			});
+	});
 });
 
 describe('GET /api/articles/:article_id/comments', () => {
