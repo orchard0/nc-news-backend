@@ -22,3 +22,16 @@ exports.retriveUsers = () => {
 		return rows;
 	});
 };
+
+exports.retriveTopicbyName = (topic) => {
+	const queryString = 'select * from topics where slug = $1';
+	return db.query(queryString, [topic]).then(({ rows }) => {
+		if (!rows.length) {
+			return Promise.reject({
+				status: 404,
+				msg: 'Not found.',
+			});
+		}
+		return rows;
+	});
+};
