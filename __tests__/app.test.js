@@ -90,7 +90,7 @@ describe('GET /api/articles/:article_id', () => {
 				expect(body.msg).toBe('Bad request.');
 			});
 	});
-	test('200: return an article with a communt_count', () => {
+	test('200: return an article with a comment_count', () => {
 		const article_id = 2;
 		return request(app)
 			.get(`/api/articles/${article_id}`)
