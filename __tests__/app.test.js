@@ -110,7 +110,6 @@ describe('GET /api/articles/', () => {
 						created_at: expect.any(String),
 						votes: expect.any(Number),
 						article_img_url: expect.any(String),
-						comment_count: expect.any(Number),
 					});
 				}
 				expect(articles).toBeSortedBy('created_at', {
@@ -157,6 +156,18 @@ describe('GET /api/articles/', () => {
 			.expect(404)
 			.then(({ body }) => {
 				expect(body.msg).toBe('Not found.');
+			});
+	});
+	test('200: return all articles with a comment_count ', () => {
+		return request(app)
+			.get(`/api/articles/`)
+			.expect(200)
+			.then(({ body }) => {
+				const { articles } = body;
+				expect(articles.length).toBe(13);
+				for (const article of articles) {
+					expect(article).toHaveProperty('comment_count');
+				}
 			});
 	});
 });
