@@ -29,9 +29,6 @@ exports.retriveArticles = (topic, sort_by = 'created_at', order = 'desc') => {
 	return db
 		.query(queryString, queryValues)
 		.then(({ rows }) => {
-			if (rows.length === 0) {
-				return Promise.reject({ status: 404, msg: 'Not found.' });
-			}
 			results = rows;
 			return db.query('select article_id from comments');
 		})

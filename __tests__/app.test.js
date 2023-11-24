@@ -123,7 +123,7 @@ describe('GET /api/articles/', () => {
 			.expect(200)
 			.then(({ body }) => {
 				const { articles } = body;
-				expect(articles.length).not.toBe(0);
+				expect(articles.length).toBe(12);
 				for (const article of articles) {
 					expect(article).not.toHaveProperty('body');
 					expect(article).toMatchObject({
@@ -141,7 +141,16 @@ describe('GET /api/articles/', () => {
 				});
 			});
 	});
-	test('200: return not found if there are no articles with specified topic', () => {
+	test('200: respond with any empty array for a valid topic without articles', () => {
+		return request(app)
+			.get(`/api/articles/?topic=paper`)
+			.expect(200)
+			.then(({ body }) => {
+				const { articles } = body;
+				expect(articles).toEqual([]);
+			});
+	});
+	test('404: return not found if topic is invalid', () => {
 		return request(app)
 			.get(`/api/articles/?topic=invaild`)
 			.expect(404)
