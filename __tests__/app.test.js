@@ -90,6 +90,17 @@ describe('GET /api/articles/:article_id', () => {
 				expect(body.msg).toBe('Bad request.');
 			});
 	});
+	test('200: return an article with a communt_count', () => {
+		const article_id = 2;
+		return request(app)
+			.get(`/api/articles/${article_id}`)
+			.expect(200)
+			.then(({ body }) => {
+				const { articles } = body;
+				expect(articles.length).toBe(1);
+				expect(articles[0]).toHaveProperty('comment_count');
+			});
+	});
 });
 
 describe('GET /api/articles/', () => {
@@ -156,18 +167,6 @@ describe('GET /api/articles/', () => {
 			.expect(404)
 			.then(({ body }) => {
 				expect(body.msg).toBe('Not found.');
-			});
-	});
-	test('200: return all articles with a comment_count ', () => {
-		return request(app)
-			.get(`/api/articles/`)
-			.expect(200)
-			.then(({ body }) => {
-				const { articles } = body;
-				expect(articles.length).toBe(13);
-				for (const article of articles) {
-					expect(article).toHaveProperty('comment_count');
-				}
 			});
 	});
 });
