@@ -90,6 +90,17 @@ describe('GET /api/articles/:article_id', () => {
 				expect(body.msg).toBe('Bad request.');
 			});
 	});
+	test('200: return an article with a comment_count', () => {
+		const article_id = 2;
+		return request(app)
+			.get(`/api/articles/${article_id}`)
+			.expect(200)
+			.then(({ body }) => {
+				const { articles } = body;
+				expect(articles.length).toBe(1);
+				expect(articles[0]).toHaveProperty('comment_count');
+			});
+	});
 });
 
 describe('GET /api/articles/', () => {
@@ -110,12 +121,52 @@ describe('GET /api/articles/', () => {
 						created_at: expect.any(String),
 						votes: expect.any(Number),
 						article_img_url: expect.any(String),
-						comment_count: expect.any(Number),
 					});
 				}
 				expect(articles).toBeSortedBy('created_at', {
 					descending: true,
 				});
+			});
+	});
+	test('200: return all articles with the specified topic', () => {
+		return request(app)
+			.get(`/api/articles/?topic=mitch`)
+			.expect(200)
+			.then(({ body }) => {
+				const { articles } = body;
+				expect(articles.length).toBe(12);
+				for (const article of articles) {
+					expect(article).not.toHaveProperty('body');
+					expect(article).toMatchObject({
+						article_id: expect.any(Number),
+						title: expect.any(String),
+						topic: 'mitch',
+						author: expect.any(String),
+						created_at: expect.any(String),
+						votes: expect.any(Number),
+						article_img_url: expect.any(String),
+					});
+				}
+				expect(articles).toBeSortedBy('created_at', {
+					descending: true,
+				});
+			});
+	});
+	test('200: respond with any empty array for a valid topic without articles', () => {
+		return request(app)
+			.get(`/api/articles/?topic=paper`)
+			.expect(200)
+			.then(({ body }) => {
+				const { articles } = body;
+				expect(articles).toEqual([]);
+			});
+	});
+	test('404: return not found if topic is invalid', () => {
+		return request(app)
+			.get(`/api/articles/?topic=invaild`)
+			.expect(404)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Not found.');
 			});
 	});
 });
