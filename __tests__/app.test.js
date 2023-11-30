@@ -169,6 +169,82 @@ describe('GET /api/articles/', () => {
 				expect(body.msg).toBe('Not found.');
 			});
 	});
+	test('200: return all articles using sort_by being created_at', () => {
+		return request(app)
+			.get(`/api/articles/?sort_by=title`)
+			.expect(200)
+			.then(({ body }) => {
+				const { articles } = body;
+				expect(articles.length).toBe(13);
+				expect(articles).toBeSortedBy('title', {
+					descending: true,
+				});
+				for (const article of articles) {
+					expect(article).not.toHaveProperty('body');
+					expect(article).toMatchObject({
+						article_id: expect.any(Number),
+						title: expect.any(String),
+						topic: expect.any(String),
+						author: expect.any(String),
+						created_at: expect.any(String),
+						votes: expect.any(Number),
+						article_img_url: expect.any(String),
+					});
+				}
+			});
+	});
+	test('200: return all articles in asc order ', () => {
+		return request(app)
+			.get('/api/articles?order=asc')
+			.expect(200)
+			.then(({ body }) => {
+				const { articles } = body;
+				expect(articles.length).toBe(13);
+				expect(articles).toBeSortedBy('created_at', {
+					descending: false,
+				});
+			});
+	});
+	test('200: return all articles sorted by author in asc order (combined use of sort_by and order query)', () => {
+		return request(app)
+			.get(`/api/articles/?sort_by=author&order=asc`)
+			.expect(200)
+			.then(({ body }) => {
+				const { articles } = body;
+				expect(articles.length).toBe(13);
+				expect(articles).toBeSortedBy('author', {
+					descending: false,
+				});
+				for (const article of articles) {
+					expect(article).not.toHaveProperty('body');
+					expect(article).toMatchObject({
+						article_id: expect.any(Number),
+						title: expect.any(String),
+						topic: expect.any(String),
+						author: expect.any(String),
+						created_at: expect.any(String),
+						votes: expect.any(Number),
+						article_img_url: expect.any(String),
+					});
+				}
+			});
+	});
+	test('400: return bad request if sort_by query is invalid', () => {
+		return request(app)
+			.get(`/api/articles/?sort_by=invalid`)
+			.expect(400)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Bad request.');
+			});
+	});
+	test('400: return bad request if order query is invalid', () => {
+		return request(app)
+			.get(`/api/articles/?order=invalid`)
+			.expect(400)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Bad request.');
+			});
+	});
 });
 
 describe('GET /api/articles/:article_id/comments', () => {

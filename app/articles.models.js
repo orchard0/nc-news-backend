@@ -24,6 +24,24 @@ exports.retriveArticleById = (id) => {
 
 exports.retriveArticles = (topic, sort_by = 'created_at', order = 'desc') => {
 	let results;
+
+	const validSortBy = [
+		'article_id',
+		'title',
+		'topic',
+		'author',
+		'body',
+		'created_at',
+		'votes',
+	];
+	if (sort_by && !validSortBy.includes(sort_by)) {
+		return Promise.reject({ status: 400, msg: 'Bad request.' });
+	}
+	const validOrder = ['desc', 'asc'];
+	if (order && !validOrder.includes(order)) {
+		return Promise.reject({ status: 400, msg: 'Bad request.' });
+	}
+
 	let queryValues = [];
 	let queryString = `select * from articles `;
 
