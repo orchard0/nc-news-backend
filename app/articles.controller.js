@@ -1,3 +1,4 @@
+const { retriveTopicbyName } = require('./app.models');
 const {
 	retriveArticleById,
 	retriveArticles,
@@ -21,8 +22,15 @@ exports.getArticleById = (req, res, next) => {
 exports.getArticles = (req, res, next) => {
 	const { topic, sort_by, order } = req.query;
 
-	retriveArticles(topic, sort_by, order)
-		.then((articles) => {
+	articlePromises = [retriveArticles(topic, sort_by, order)];
+
+	if (topic) {
+		articlePromises.push(retriveTopicbyName(topic));
+	}
+
+	Promise.all(articlePromises)
+		.then((resolved) => {
+			const articles = resolved[0];
 			res.status(200).send({ articles });
 		})
 		.catch((err) => {
