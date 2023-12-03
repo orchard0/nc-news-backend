@@ -1,7 +1,6 @@
 const format = require('pg-format');
-const db = require('../db/connection');
-const { articleCommentCount } = require('./utils');
-const { getArticleById } = require('./articles.controller');
+const db = require('../../db/connection');
+const { articleCommentCount } = require('../utils');
 
 exports.retriveArticleById = (id) => {
 	const sqlQuery = `select * from articles where article_id = $1`;

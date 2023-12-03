@@ -1,4 +1,4 @@
-const db = require('../db/connection');
+const db = require('../../db/connection');
 
 exports.retriveAuthors = (name) => {
 	let queryString = `select * from users `;

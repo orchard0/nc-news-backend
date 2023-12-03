@@ -1,4 +1,4 @@
-const db = require('../db/connection');
+const db = require('../../db/connection');
 const fs = require('fs/promises');
 
 exports.retriveTopics = () => {
@@ -10,7 +10,7 @@ exports.retriveTopics = () => {
 
 exports.retriveEndPoints = () => {
 	return fs
-		.readFile(`${__dirname}/../endpoints.json`, 'utf-8')
+		.readFile(`${__dirname}/../../endpoints.json`, 'utf-8')
 		.then((data) => {
 			return JSON.parse(data);
 		});

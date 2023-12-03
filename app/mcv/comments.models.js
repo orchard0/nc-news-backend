@@ -1,4 +1,4 @@
-const db = require('../db/connection');
+const db = require('../../db/connection');
 
 exports.retriveCommentbyId = (commentId) => {
 	const queryString = `select * from comments where comment_id = $1`;
