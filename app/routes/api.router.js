@@ -1,17 +1,14 @@
-const {
-	getApiEndpoints,
-	getTopics,
-	deleteComment,
-	getUsers,
-} = require('../mcv/app.controller');
+const { getApiEndpoints } = require('../mcv/app.controller');
 const apiRouter = require('express').Router();
 const articlesRouter = require('./articles.router');
+const commentsRouter = require('./comments.router');
+const topicsRouter = require('./topics.router');
+const usersRouter = require('./users.router');
 
 apiRouter.use('/articles', articlesRouter);
+apiRouter.use('/topics', topicsRouter);
+apiRouter.use('/comments', commentsRouter);
+apiRouter.use('/users', usersRouter);
 apiRouter.get('/', getApiEndpoints);
-
-apiRouter.get('/topics', getTopics);
-apiRouter.delete('/comments/:comment_id', deleteComment);
-apiRouter.get('/users', getUsers);
 
 module.exports = apiRouter;
