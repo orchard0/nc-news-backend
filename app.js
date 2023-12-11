@@ -21,6 +21,9 @@ const {
 } = require('./app/mcv/articles.controller');
 
 const app = express();
+const cors = require('cors');
+app.use(cors());
+
 app.use(express.json());
 
 app.get('/api', getApiEndpoints);
