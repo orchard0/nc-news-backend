@@ -3,27 +3,17 @@ const db = require('../../db/connection');
 const { articleCommentCount } = require('../utils');
 
 exports.retriveArticleById = (id) => {
-	const sqlQuery = `select * from articles where article_id = $1`;
-	let article;
-	return db
-		.query(sqlQuery, [id])
-		.then(({ rows }) => {
-			if (rows.length === 0) {
-				return Promise.reject({ status: 404, msg: 'Not found.' });
-			}
-			article = rows;
-			const commentQuery = 'select * from comments where article_id = $1';
-			return db.query(commentQuery, [id]);
-		})
-		.then(({ rows }) => {
-			article[0].comment_count = rows.length;
-			return article;
-		});
+	const sqlQuery =
+		'SELECT articles.*,  count(comments.article_id) as comment_count from articles left join comments on articles.article_id = comments.article_id WHERE articles.article_id = $1 GROUP BY articles.article_id ';
+	return db.query(sqlQuery, [id]).then(({ rows }) => {
+		if (rows.length === 0) {
+			return Promise.reject({ status: 404, msg: 'Not found.' });
+		}
+		return rows;
+	});
 };
 
 exports.retriveArticles = (topic, sort_by = 'created_at', order = 'desc') => {
-	let results;
-
 	const validSortBy = [
 		'article_id',
 		'title',
@@ -42,32 +32,24 @@ exports.retriveArticles = (topic, sort_by = 'created_at', order = 'desc') => {
 	}
 
 	let queryValues = [];
-	let queryString = `select * from articles `;
+	let queryString = `SELECT articles.*, count(comments.article_id) as comment_count from articles left join comments on articles.article_id = comments.article_id `;
 
 	if (topic) {
 		queryValues.push(topic);
 		queryString += `where topic = $1 `;
 	}
 
+	queryString += 'GROUP BY articles.article_id ';
+
 	if (sort_by) {
 		queryString += `order by ${sort_by} ${order}`;
 	}
-	return db
-		.query(queryString, queryValues)
-		.then(({ rows }) => {
-			results = rows;
-			return db.query('select article_id from comments');
-		})
-		.then(({ rows }) => {
-			const commentCount = articleCommentCount(rows);
-			return results.map(({ body, article_id, ...rest }) => {
-				return {
-					article_id,
-					comment_count: commentCount[article_id] || 0,
-					...rest,
-				};
-			});
+	console.log(queryString);
+	return db.query(queryString, queryValues).then(({ rows }) => {
+		return rows.map(({ body, ...rest }) => {
+			return { ...rest };
 		});
+	});
 };
 
 exports.retriveCommentsbyArticleId = (articleId) => {
