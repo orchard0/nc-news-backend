@@ -1,10 +1,10 @@
 # Northcoders News API
 
-Backend hosted [here](https://nc-news-wbhn.onrender.com/api).
+Backend hosted [here](https://northcoders-news-backend.vercel.app/api).
 
-Frontend hosted [here](https://coruscating-clafoutis-6b012b.netlify.app). Repo is [here](https://github.com/orchard0/fe-nc-news).
+Frontend hosted [here](https://northcoders-news-frontend.vercel.app/) and the repo is [here](https://github.com/orchard0/northcoders-news-frontend).
 
-This is an API for the retrieving articles, comments, and related information.
+This is an API for the retrieving articles, comments, and related information. Check out the link above for full api routes.
 
 ## Getting started
 
