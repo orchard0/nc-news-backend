@@ -487,3 +487,61 @@ describe('GET /api/users', () => {
 			});
 	});
 });
+
+describe('PATCH /api/comments/:comment_id', () => {
+	test('200: respond updated comment', () => {
+		const comment_id = 3;
+		const body = { inc_votes: 1 };
+		return request(app)
+			.patch(`/api/comments/${comment_id}`)
+			.send(body)
+			.expect(200)
+			.then(({ body }) => {
+				const { comment } = body;
+				expect(comment.length).toBe(1);
+				expect(comment[0]).toMatchObject({
+					comment_id: comment_id,
+					article_id: 1,
+					author: 'icellusedkars',
+					created_at: '2020-03-01T01:13:00.000Z',
+					votes: 101,
+				});
+			});
+	});
+
+	test('400: responds with a bad request if the patch is invaild', () => {
+		const comment_id = 3;
+		const body = { inc_votes: 'invalid' };
+		return request(app)
+			.patch(`/api/comments/${comment_id}`)
+			.send(body)
+			.expect(400)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Bad request.');
+			});
+	});
+
+	test('400: responds with bad request if the comment_id is not vaild', () => {
+		const comment_id = 'invalid';
+		const body = { inc_votes: 1 };
+		return request(app)
+			.patch(`/api/comments/${comment_id}`)
+			.send(body)
+			.expect(400)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Bad request.');
+			});
+	});
+
+	test('404: responds with not found if the comment_id does not exist', () => {
+		const comment_id = 999999;
+		const body = { inc_votes: 1 };
+		return request(app)
+			.patch(`/api/comments/${comment_id}`)
+			.send(body)
+			.expect(404)
+			.then(({ body }) => {
+				expect(body.msg).toBe('Not found.');
+			});
+	});
+});
