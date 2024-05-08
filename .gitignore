@@ -3,3 +3,5 @@ node_modules
 notes.txt
 .vscode/settings.json
 package-lock.json
+.vercel
+TODO
