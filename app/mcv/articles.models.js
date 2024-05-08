@@ -44,7 +44,6 @@ exports.retriveArticles = (topic, sort_by = 'created_at', order = 'desc') => {
 	if (sort_by) {
 		queryString += `order by ${sort_by} ${order}`;
 	}
-	console.log(queryString);
 	return db.query(queryString, queryValues).then(({ rows }) => {
 		return rows.map(({ body, ...rest }) => {
 			return { ...rest };
