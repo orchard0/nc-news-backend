@@ -79,15 +79,12 @@ exports.addCommentOnArticle = (article_id, { body, username }) => {
 };
 
 exports.updateArticleOnDatabase = (articleID, body) => {
-	return this.retriveArticleById(articleID)
-		.then((articles) => {
-			const article = articles[0];
-			const updatedVotes = article.votes + Number(body.inc_votes);
-			const queryValues = [updatedVotes, articleID];
-			const queryString = `update articles set votes = $1 where article_id = $2 returning *`;
-			return db.query(queryString, queryValues);
-		})
-		.then(({ rows }) => {
-			return rows;
-		});
+	const queryValues = [Number(body.inc_votes), articleID];
+	const queryString = `update articles set votes = votes + $1 where article_id = $2 returning *`;
+	return db.query(queryString, queryValues).then(({ rows }) => {
+		if (rows.length === 0) {
+			return Promise.reject({ status: 404, msg: 'Not found.' });
+		}
+		return rows;
+	});
 };
